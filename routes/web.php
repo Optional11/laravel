@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,6 +48,9 @@ $posts = [
 ];
 
 Route::get('/posts', function () use ($posts) {
+    // dd(request()->all());
+    // dd((int) request()->input('page', 1));
+    // dd((int) request()->query('page', 1));
     // compact($posts) === ['posts' => $posts]
     return view('posts.index', ['posts' => $posts]);
 })->name('posts.index');
@@ -63,3 +67,35 @@ Route::get('/posts/{id}', function ($id) use ($posts) {
     //     'id' => '[0-9]+',
     // ])
     ->name('posts.show');
+
+Route::prefix('/fun')->name('fun.')->group(function () use ($posts) {
+    Route::get('/responses', function () use ($posts) {
+        return response($posts, 201)
+            ->header('Content-type', 'application-json')
+            ->cookie('MY_COOKIE', 'Jakub Sredl', 3600);
+    })->name('responses');
+
+    Route::get('/redirect', function () {
+        return redirect('/contact');
+    })->name('redirect');
+
+    Route::get('/back', function () {
+        return back();
+    })->name('back');
+
+    Route::get('/named-route', function () {
+        return redirect()->route('posts.show', ['id' => 1]);
+    })->name('named-route');
+
+    Route::get('/away', function () {
+        return redirect()->away('https://google.com');
+    })->name('away');
+
+    Route::get('/json', function () use ($posts) {
+        return response()->json($posts);
+    })->name('json');
+
+    Route::get('/download', function () use ($posts) {
+        return response()->download(public_path('/daniel.jpg'), 'face.jpg');
+    })->name('download');
+});
