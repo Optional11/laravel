@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,10 +26,18 @@ use Illuminate\Support\Facades\Route;
 // })->name('home.contact');
 
 // doing same as above, just simpler
-Route::view('/', 'home.index')
+// Route::view('/', 'home.index')
+//     ->name('home.index');
+// Route::view('/contact', 'home.contact')
+//     ->name('home.contact');
+
+// doing same as above, but using controller
+Route::get('/', [HomeController::class, 'home'])
     ->name('home.index');
-Route::view('/contact', 'home.contact')
+Route::get('/contact', [HomeController::class, 'contact'])
     ->name('home.contact');
+
+Route::get('/single', AboutController::class);
 
 $posts = [
     1 => [
@@ -44,29 +55,32 @@ $posts = [
         'title' => 'Intro to C++',
         'content' => 'This is a short intro to C++',
         'is_new' => false,
-    ]
+    ],
 ];
 
-Route::get('/posts', function () use ($posts) {
-    // dd(request()->all());
-    // dd((int) request()->input('page', 1));
-    // dd((int) request()->query('page', 1));
-    // compact($posts) === ['posts' => $posts]
-    return view('posts.index', ['posts' => $posts]);
-})->name('posts.index');
+Route::resource('posts', PostsController::class)->only(['index', 'show']);
 
-Route::get('/posts/{id}', function ($id) use ($posts) {
+// Below are just samples routes 
+// Route::get('/posts', function () use ($posts) {
+//     // dd(request()->all());
+//     // dd((int) request()->input('page', 1));
+//     // dd((int) request()->query('page', 1));
+//     // compact($posts) === ['posts' => $posts]
+//     return view('posts.index', ['posts' => $posts]);
+// })->name('posts.index');
 
-    abort_if(!isset($posts[$id]), 404);
+// Route::get('/posts/{id}', function ($id) use ($posts) {
 
-    return view('posts.show', ['post' => $posts[$id]]);
-})
-    // Global constraint defined in RouteServiceprovider in boot method
-    // constraint on route locally
-    // ->where([
-    //     'id' => '[0-9]+',
-    // ])
-    ->name('posts.show');
+//     abort_if(!isset($posts[$id]), 404);
+
+//     return view('posts.show', ['post' => $posts[$id]]);
+// })
+//     // Global constraint defined in RouteServiceprovider in boot method
+//     // constraint on route locally
+//     // ->where([
+//     //     'id' => '[0-9]+',
+//     // ])
+//     ->name('posts.show');
 
 Route::prefix('/fun')->name('fun.')->group(function () use ($posts) {
     Route::get('/responses', function () use ($posts) {
