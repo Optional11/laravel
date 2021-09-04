@@ -58,7 +58,8 @@ $posts = [
     ],
 ];
 
-Route::resource('posts', PostsController::class)->only(['index', 'show', 'create', 'store']);
+// Route::resource('posts', PostsController::class)->only(['index', 'show', 'create', 'store', 'edit', 'update']);
+Route::resource('posts', PostsController::class);
 
 // Below are just samples routes 
 // Route::get('/posts', function () use ($posts) {
