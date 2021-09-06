@@ -3,9 +3,9 @@
 @section('title', 'Blog posts') 
 
 @section('content')
-    @foreach ($posts as $key => $post)
+    {{--  @foreach ($posts as $key => $post)
         <div class="">{{ $key }}. {{ $post['title'] }}</div>
-    @endforeach
+    @endforeach  --}}
 
     {{-- using foreach with if --}}
     @forelse ($posts as $key => $post)
