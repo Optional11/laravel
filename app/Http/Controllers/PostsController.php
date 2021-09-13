@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PostsController extends Controller
 {
@@ -16,7 +17,22 @@ class PostsController extends Controller
      */
     public function index()
     {
-        return view('posts.index', ['posts' => BlogPost::all()]);
+
+        // DB::enableQueryLog();
+
+        // // $posts = BlogPost::all();
+        // $posts = BlogPost::with('comments')->get();
+
+        // foreach ($posts as $post) {
+        //     foreach ($post->comments as $comment) {
+        //         echo $comment->content;
+        //     }
+        // }
+
+        // dd(DB::getQueryLog());
+
+        //withCount creates new field called as relation + _count -> comments_count
+        return view('posts.index', ['posts' => BlogPost::withCount('comments')->get()]);
         // return view('posts.index', ['posts' => BlogPost::orderBy('created_at', 'desc')->take(5)->get()]);
     }
 

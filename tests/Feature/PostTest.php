@@ -31,6 +31,7 @@ class PostTest extends TestCase
 
         // assert part
         $response->assertSeeText('New title');
+        $response->assertSeeText('No comments yet');
 
         $this->assertDatabaseHas('blog_posts', [
             'title' => 'New title',
@@ -104,7 +105,6 @@ class PostTest extends TestCase
 
         $this->assertEquals(session('status'), 'Blog Post was deleted');
         $this->assertDatabaseMissing('blog_posts', $post->getAttributes());
-
     }
 
     private function create_dummy_blog_post(): BlogPost
